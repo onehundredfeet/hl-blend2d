@@ -76,29 +76,36 @@ enum BLCompOp {
   "BL_COMP_OP_MAX_VALUE"
 };
 
+[Internal="BLImageCodec"] 
+interface ImageCodec {
+    void ImageCodec();
+    void findByName(string name );
+};
 
 
 [Internal="BLImage"] 
 interface Image {
     void Image(int width, int height, BLFormat format );
+    void writeToFile( string path, [Deref] ImageCodec codec );
+
 };
 
 [Internal="BLTriangle"] 
 interface Triangle {
-
+    
 };
-
 
 [Internal="BLContext"] 
 interface Context {
-    void Context( );
-    void Context( [Deref] Image image );
+    void Context();
     void begin( [Deref] Image image);
     void fillAll();
     void setCompOp( BLCompOp compOp);
 
     [CObject,Internal="blend2_context_setFillStyleColour"] void setFillStyleColour(int r, int g, int b, int a);
-    [CObject,Internal="blend2_context_setFillStyleColourPacked"] void setFillStyleColour(uint rgba);
+    [CObject,Internal="blend2_context_setFillStyleColourPacked"] void setFillStyleColourPacked(uint rgba);
+
+
 
     void fillTriangle( [Deref] Triangle triangle );
     void end();

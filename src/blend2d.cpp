@@ -319,6 +319,11 @@ HL_PRIM int HL_NAME(BLCompOp_valueToIndex0)( int value ) {
 	for( int i = 0; i < 30; i++ ) if ( value == (int)BLCompOp__values[i]) return i; return -1;
 }
 DEFINE_PRIM(_I32, BLCompOp_valueToIndex0, _I32);
+static void finalize_ImageCodec( _ref(BLImageCodec)* _this ) { free_ref(_this ); }
+HL_PRIM void HL_NAME(ImageCodec_delete)( _ref(BLImageCodec)* _this ) {
+	free_ref(_this );
+}
+DEFINE_PRIM(_VOID, ImageCodec_delete, _IDL);
 static void finalize_Image( _ref(BLImage)* _this ) { free_ref(_this ); }
 HL_PRIM void HL_NAME(Image_delete)( _ref(BLImage)* _this ) {
 	free_ref(_this );
@@ -334,20 +339,32 @@ HL_PRIM void HL_NAME(Context_delete)( _ref(BLContext)* _this ) {
 	free_ref(_this );
 }
 DEFINE_PRIM(_VOID, Context_delete, _IDL);
+HL_PRIM _ref(BLImageCodec)* HL_NAME(ImageCodec_new0)() {
+	return alloc_ref((new BLImageCodec()),ImageCodec);
+}
+DEFINE_PRIM(_IDL, ImageCodec_new0,);
+
+HL_PRIM void HL_NAME(ImageCodec_findByName1)(_ref(BLImageCodec)* _this, vstring * name) {
+	const char* name__cstr = (name == nullptr) ? "" : hl_to_utf8( name->bytes ); // Should be garbage collected
+	(_unref(_this)->findByName(name__cstr));
+}
+DEFINE_PRIM(_VOID, ImageCodec_findByName1, _IDL _STRING);
+
 HL_PRIM _ref(BLImage)* HL_NAME(Image_new3)(int width, int height, int format) {
 	return alloc_ref((new BLImage(width, height, BLFormat__values[format])),Image);
 }
 DEFINE_PRIM(_IDL, Image_new3, _I32 _I32 _I32);
 
+HL_PRIM void HL_NAME(Image_writeToFile2)(_ref(BLImage)* _this, vstring * path, _ref(BLImageCodec)* codec) {
+	const char* path__cstr = (path == nullptr) ? "" : hl_to_utf8( path->bytes ); // Should be garbage collected
+	(_unref(_this)->writeToFile(path__cstr, *_unref_ptr_safe(codec)));
+}
+DEFINE_PRIM(_VOID, Image_writeToFile2, _IDL _STRING _IDL);
+
 HL_PRIM _ref(BLContext)* HL_NAME(Context_new0)() {
 	return alloc_ref((new BLContext()),Context);
 }
 DEFINE_PRIM(_IDL, Context_new0,);
-
-HL_PRIM _ref(BLContext)* HL_NAME(Context_new1)(_ref(BLImage)* image) {
-	return alloc_ref((new BLContext(*_unref_ptr_safe(image))),Context);
-}
-DEFINE_PRIM(_IDL, Context_new1, _IDL);
 
 HL_PRIM void HL_NAME(Context_begin1)(_ref(BLContext)* _this, _ref(BLImage)* image) {
 	(_unref(_this)->begin(*_unref_ptr_safe(image)));
@@ -369,10 +386,10 @@ HL_PRIM void HL_NAME(Context_setFillStyleColour4)(_ref(BLContext)* _this, int r,
 }
 DEFINE_PRIM(_VOID, Context_setFillStyleColour4, _IDL _I32 _I32 _I32 _I32);
 
-HL_PRIM void HL_NAME(Context_setFillStyleColour1)(_ref(BLContext)* _this, unsigned int rgba) {
+HL_PRIM void HL_NAME(Context_setFillStyleColourPacked1)(_ref(BLContext)* _this, unsigned int rgba) {
 	(blend2_context_setFillStyleColourPacked( _unref(_this) , rgba));
 }
-DEFINE_PRIM(_VOID, Context_setFillStyleColour1, _IDL _I32);
+DEFINE_PRIM(_VOID, Context_setFillStyleColourPacked1, _IDL _I32);
 
 HL_PRIM void HL_NAME(Context_fillTriangle1)(_ref(BLContext)* _this, _ref(BLTriangle)* triangle) {
 	(_unref(_this)->fillTriangle(*_unref_ptr_safe(triangle)));
