@@ -293,4 +293,95 @@ inline static void _idc_copy_array( varray *dst, double *src,  int count) {
 
 extern "C" {
 
+static BLFormat BLFormat__values[] = { BL_FORMAT_NONE,BL_FORMAT_PRGB32,BL_FORMAT_XRGB32,BL_FORMAT_A8,BL_FORMAT_MAX_VALUE };
+HL_PRIM int HL_NAME(BLFormat_toValue0)( int idx ) {
+	return BLFormat__values[idx];
+}
+DEFINE_PRIM(_I32, BLFormat_toValue0, _I32);
+HL_PRIM int HL_NAME(BLFormat_indexToValue0)( int idx ) {
+	return BLFormat__values[idx];
+}
+DEFINE_PRIM(_I32, BLFormat_indexToValue0, _I32);
+HL_PRIM int HL_NAME(BLFormat_valueToIndex0)( int value ) {
+	for( int i = 0; i < 5; i++ ) if ( value == (int)BLFormat__values[i]) return i; return -1;
+}
+DEFINE_PRIM(_I32, BLFormat_valueToIndex0, _I32);
+static BLCompOp BLCompOp__values[] = { BL_COMP_OP_SRC_OVER,BL_COMP_OP_SRC_COPY,BL_COMP_OP_SRC_IN,BL_COMP_OP_SRC_OUT,BL_COMP_OP_SRC_ATOP,BL_COMP_OP_DST_OVER,BL_COMP_OP_DST_COPY,BL_COMP_OP_DST_IN,BL_COMP_OP_DST_OUT,BL_COMP_OP_DST_ATOP,BL_COMP_OP_XOR,BL_COMP_OP_CLEAR,BL_COMP_OP_PLUS,BL_COMP_OP_MINUS,BL_COMP_OP_MODULATE,BL_COMP_OP_MULTIPLY,BL_COMP_OP_SCREEN,BL_COMP_OP_OVERLAY,BL_COMP_OP_DARKEN,BL_COMP_OP_LIGHTEN,BL_COMP_OP_COLOR_DODGE,BL_COMP_OP_COLOR_BURN,BL_COMP_OP_LINEAR_BURN,BL_COMP_OP_LINEAR_LIGHT,BL_COMP_OP_PIN_LIGHT,BL_COMP_OP_HARD_LIGHT,BL_COMP_OP_SOFT_LIGHT,BL_COMP_OP_DIFFERENCE,BL_COMP_OP_EXCLUSION,BL_COMP_OP_MAX_VALUE };
+HL_PRIM int HL_NAME(BLCompOp_toValue0)( int idx ) {
+	return BLCompOp__values[idx];
+}
+DEFINE_PRIM(_I32, BLCompOp_toValue0, _I32);
+HL_PRIM int HL_NAME(BLCompOp_indexToValue0)( int idx ) {
+	return BLCompOp__values[idx];
+}
+DEFINE_PRIM(_I32, BLCompOp_indexToValue0, _I32);
+HL_PRIM int HL_NAME(BLCompOp_valueToIndex0)( int value ) {
+	for( int i = 0; i < 30; i++ ) if ( value == (int)BLCompOp__values[i]) return i; return -1;
+}
+DEFINE_PRIM(_I32, BLCompOp_valueToIndex0, _I32);
+static void finalize_Image( _ref(BLImage)* _this ) { free_ref(_this ); }
+HL_PRIM void HL_NAME(Image_delete)( _ref(BLImage)* _this ) {
+	free_ref(_this );
+}
+DEFINE_PRIM(_VOID, Image_delete, _IDL);
+static void finalize_Triangle( _ref(BLTriangle)* _this ) { free_ref(_this ); }
+HL_PRIM void HL_NAME(Triangle_delete)( _ref(BLTriangle)* _this ) {
+	free_ref(_this );
+}
+DEFINE_PRIM(_VOID, Triangle_delete, _IDL);
+static void finalize_Context( _ref(BLContext)* _this ) { free_ref(_this ); }
+HL_PRIM void HL_NAME(Context_delete)( _ref(BLContext)* _this ) {
+	free_ref(_this );
+}
+DEFINE_PRIM(_VOID, Context_delete, _IDL);
+HL_PRIM _ref(BLImage)* HL_NAME(Image_new3)(int width, int height, int format) {
+	return alloc_ref((new BLImage(width, height, BLFormat__values[format])),Image);
+}
+DEFINE_PRIM(_IDL, Image_new3, _I32 _I32 _I32);
+
+HL_PRIM _ref(BLContext)* HL_NAME(Context_new0)() {
+	return alloc_ref((new BLContext()),Context);
+}
+DEFINE_PRIM(_IDL, Context_new0,);
+
+HL_PRIM _ref(BLContext)* HL_NAME(Context_new1)(_ref(BLImage)* image) {
+	return alloc_ref((new BLContext(*_unref_ptr_safe(image))),Context);
+}
+DEFINE_PRIM(_IDL, Context_new1, _IDL);
+
+HL_PRIM void HL_NAME(Context_begin1)(_ref(BLContext)* _this, _ref(BLImage)* image) {
+	(_unref(_this)->begin(*_unref_ptr_safe(image)));
+}
+DEFINE_PRIM(_VOID, Context_begin1, _IDL _IDL);
+
+HL_PRIM void HL_NAME(Context_fillAll0)(_ref(BLContext)* _this) {
+	(_unref(_this)->fillAll());
+}
+DEFINE_PRIM(_VOID, Context_fillAll0, _IDL);
+
+HL_PRIM void HL_NAME(Context_setCompOp1)(_ref(BLContext)* _this, int compOp) {
+	(_unref(_this)->setCompOp(BLCompOp__values[compOp]));
+}
+DEFINE_PRIM(_VOID, Context_setCompOp1, _IDL _I32);
+
+HL_PRIM void HL_NAME(Context_setFillStyleColour4)(_ref(BLContext)* _this, int r, int g, int b, int a) {
+	(blend2_context_setFillStyleColour( _unref(_this) , r, g, b, a));
+}
+DEFINE_PRIM(_VOID, Context_setFillStyleColour4, _IDL _I32 _I32 _I32 _I32);
+
+HL_PRIM void HL_NAME(Context_setFillStyleColour1)(_ref(BLContext)* _this, unsigned int rgba) {
+	(blend2_context_setFillStyleColourPacked( _unref(_this) , rgba));
+}
+DEFINE_PRIM(_VOID, Context_setFillStyleColour1, _IDL _I32);
+
+HL_PRIM void HL_NAME(Context_fillTriangle1)(_ref(BLContext)* _this, _ref(BLTriangle)* triangle) {
+	(_unref(_this)->fillTriangle(*_unref_ptr_safe(triangle)));
+}
+DEFINE_PRIM(_VOID, Context_fillTriangle1, _IDL _IDL);
+
+HL_PRIM void HL_NAME(Context_end0)(_ref(BLContext)* _this) {
+	(_unref(_this)->end());
+}
+DEFINE_PRIM(_VOID, Context_end0, _IDL);
+
 }

@@ -1,6 +1,105 @@
 
-[NoDelete]
-interface Blend2d {
+
+
+
+
+enum BLFormat {
+    "BL_FORMAT_NONE",
+    "BL_FORMAT_PRGB32",
+    "BL_FORMAT_XRGB32",
+    "BL_FORMAT_A8",
+    "BL_FORMAT_MAX_VALUE"
+};
+
+//! Composition & blending operator.
+enum BLCompOp {
+  //! Source-over [default].
+  "BL_COMP_OP_SRC_OVER",
+  //! Source-copy.
+  "BL_COMP_OP_SRC_COPY",
+  //! Source-in.
+  "BL_COMP_OP_SRC_IN",
+  //! Source-out.
+  "BL_COMP_OP_SRC_OUT",
+  //! Source-atop.
+  "BL_COMP_OP_SRC_ATOP",
+  //! Destination-over.
+  "BL_COMP_OP_DST_OVER",
+  //! Destination-copy [nop].
+  "BL_COMP_OP_DST_COPY",
+  //! Destination-in.
+  "BL_COMP_OP_DST_IN",
+  //! Destination-out.
+  "BL_COMP_OP_DST_OUT",
+  //! Destination-atop.
+  "BL_COMP_OP_DST_ATOP",
+  //! Xor.
+  "BL_COMP_OP_XOR",
+  //! Clear.
+  "BL_COMP_OP_CLEAR",
+  //! Plus.
+  "BL_COMP_OP_PLUS",
+  //! Minus.
+  "BL_COMP_OP_MINUS",
+  //! Modulate.
+  "BL_COMP_OP_MODULATE",
+  //! Multiply.
+  "BL_COMP_OP_MULTIPLY",
+  //! Screen.
+  "BL_COMP_OP_SCREEN",
+  //! Overlay.
+  "BL_COMP_OP_OVERLAY",
+  //! Darken.
+  "BL_COMP_OP_DARKEN",
+  //! Lighten.
+  "BL_COMP_OP_LIGHTEN",
+  //! Color dodge.
+  "BL_COMP_OP_COLOR_DODGE",
+  //! Color burn.
+  "BL_COMP_OP_COLOR_BURN",
+  //! Linear burn.
+  "BL_COMP_OP_LINEAR_BURN",
+  //! Linear light.
+  "BL_COMP_OP_LINEAR_LIGHT",
+  //! Pin light.
+  "BL_COMP_OP_PIN_LIGHT",
+  //! Hard-light.
+  "BL_COMP_OP_HARD_LIGHT",
+  //! Soft-light.
+  "BL_COMP_OP_SOFT_LIGHT",
+  //! Difference.
+  "BL_COMP_OP_DIFFERENCE",
+  //! Exclusion.
+  "BL_COMP_OP_EXCLUSION",
+
+  //! Count of composition & blending operators.
+  "BL_COMP_OP_MAX_VALUE"
 };
 
 
+
+[Internal="BLImage"] 
+interface Image {
+    void Image(int width, int height, BLFormat format );
+};
+
+[Internal="BLTriangle"] 
+interface Triangle {
+
+};
+
+
+[Internal="BLContext"] 
+interface Context {
+    void Context( );
+    void Context( [Deref] Image image );
+    void begin( [Deref] Image image);
+    void fillAll();
+    void setCompOp( BLCompOp compOp);
+
+    [CObject,Internal="blend2_context_setFillStyleColour"] void setFillStyleColour(int r, int g, int b, int a);
+    [CObject,Internal="blend2_context_setFillStyleColourPacked"] void setFillStyleColour(uint rgba);
+
+    void fillTriangle( [Deref] Triangle triangle );
+    void end();
+};
