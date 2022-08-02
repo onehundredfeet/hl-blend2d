@@ -1,0 +1,11 @@
+{
+	"name" : "hl-blend2d",
+	"url" : "https://github.com/onehundredfeet/hl-blend2d",
+	"license" : "MIT",
+	"contributors" : ["onehundredfeet"],
+	"description" : "Limited support for Blend2D in Haxe/HL",
+	"version" : "0.1.0",
+	"releasenote" : "",
+	"classPath": ".",
+	"dependencies": { "hl-idl" : ""}
+}

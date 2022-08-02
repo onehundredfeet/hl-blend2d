@@ -1,0 +1,9 @@
+[submodule "ext/blend2d"]
+	path = ext/blend2d
+	url = https://github.com/blend2d/blend2d.git
+[submodule "ext/hl-idl"]
+	path = ext/hl-idl
+	url = https://github.com/onehundredfeet/hl-idl.git
+[submodule "ext/asmjit"]
+	path = ext/asmjit
+	url = https://github.com/asmjit/asmjit
