@@ -29,9 +29,9 @@ void blah() {
   ctx.setCompOp(BL_COMP_OP_SRC_OVER);
   ctx.setFillStyle(BLRgba32(0xFFFFFFFF));
 //  ctx.fillPath(path);
-  //  ctx.fillPolygon()
+//   ctx.fillPolygon()
   // Detach the rendering context from `img`.
-  ctx.end();
+  //ctx.end();
 
   // Let's use some built-in codecs provided by Blend2D.
   BLImageCodec codec;

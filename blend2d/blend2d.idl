@@ -90,15 +90,69 @@ interface Image {
 
 };
 
-[Internal="BLTriangle"] 
-interface Triangle {
-    
+
+//! Rendering context create-flags.
+enum BLContextCreateFlags {
+  //! No flags.
+  "BL_CONTEXT_CREATE_NO_FLAGS",
+
+  //! Disables JIT pipeline generator.
+  "BL_CONTEXT_CREATE_FLAG_DISABLE_JIT",
+
+  //! Fallbacks to a synchronous rendering in case that the rendering engine wasn't able to acquire threads. This
+  //! flag only makes sense when the asynchronous mode was specified by having `threadCount` greater than 0. If the
+  //! rendering context fails to acquire at least one thread it would fallback to synchronous mode with no worker
+  //! threads.
+  //!
+  //! \note If this flag is specified with `threadCount == 1` it means to immediately fallback to synchronous
+  //! rendering. It's only practical to use this flag with 2 or more requested threads.
+  "BL_CONTEXT_CREATE_FLAG_FALLBACK_TO_SYNC",
+
+  //! If this flag is specified and asynchronous rendering is enabled then the context would create its own isolated
+  //! thread-pool, which is useful for debugging purposes.
+  //!
+  //! Do not use this flag in production as rendering contexts with isolated thread-pool have to create and destroy all
+  //! threads they use. This flag is only useful for testing, debugging, and isolated benchmarking.
+  "BL_CONTEXT_CREATE_FLAG_ISOLATED_THREAD_POOL",
+
+  //! If this flag is specified and JIT pipeline generation enabled then the rendering context would create its own
+  //! isolated JIT runtime. which is useful for debugging purposes. This flag will be ignored if JIT pipeline
+  //! compilation is either not supported or was disabled by other flags.
+  //!
+  //! Do not use this flag in production as rendering contexts with isolated JIT runtime do not use global pipeline
+  //! cache, that's it, after the rendering context is destroyed the JIT runtime is destroyed with it with all
+  //! compiled pipelines. This flag is only useful for testing, debugging, and isolated benchmarking.
+  "BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT_RUNTIME",
+
+  //! Enables logging to stderr of isolated runtime.
+  //!
+  //! \note Must be used with \ref "BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT_RUNTIME otherwise it would have no effect.
+  "BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT_LOGGING",
+
+  //! Override CPU features when creating isolated context.
+  "BL_CONTEXT_CREATE_FLAG_OVERRIDE_CPU_FEATURES"
+};
+
+[Internal="BLContextCreateInfo"] 
+interface ContextDesc {
+    attribute uint flags;   //! Create flags, see \ref BLContextCreateFlags.
+    //! Number of worker threads to use for asynchronous rendering, if non-zero.
+    //!
+    //! If `threadCount` is zero it means to initialize the context for synchronous rendering. This means that every
+    //! operation will take effect immediately. If `threadCount` is `1` it means that the rendering will be asynchronous,
+    //! but no thread would be acquired from a thread-pool, because the user thread will be used as a worker. And
+    //! finally, if `threadCount` is greater than `1` then total of `threadCount - 1` threads will be acquired from
+    //! thread-pool and used as additional workers.
+    attribute uint threadCount;
+    attribute uint cpuFeatures; //! CPU features to use in isolated JIT runtime (if supported), only used when `flags` contains
+    attribute uint commandQueueLimit;
 };
 
 [Internal="BLContext"] 
 interface Context {
     void Context();
     void begin( [Deref] Image image);
+    [Internal="begin"] void beginEx( [Deref] Image image,  [Deref] ContextDesc desc);
     void fillAll();
     void setCompOp( BLCompOp compOp);
 
@@ -107,6 +161,19 @@ interface Context {
 
 
 
-    void fillTriangle( [Deref] Triangle triangle );
+    void fillTriangle( double x0, double y0, double x1, double y1, double x2, double y2 );
+    void fillCircle(double cx, double cy, double r);
+    void fillRect(double x, double y, double w, double h);
+    void fillRoundRect(double x, double y, double w, double h, double rx, double ry);
+    void fillPie(double cx, double cy, double rx, double ry, double start, double sweep);
+    void fillBox(double x0, double y0, double x1, double y1);
+
+    void strokeTriangle( double x0, double y0, double x1, double y1, double x2, double y2 );
+    void strokeCircle(double cx, double cy, double r);
+    void strokeRect(double x, double y, double w, double h);
+    void strokeRoundRect(double x, double y, double w, double h, double rx, double ry);
+    void strokePie(double cx, double cy, double rx, double ry, double start, double sweep);
+    void strokeBox(double x0, double y0, double x1, double y1);
+
     void end();
 };

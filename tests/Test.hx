@@ -20,6 +20,8 @@ class Test {
 
         ctx.setCompOp(BL_COMP_OP_SRC_OVER);
         ctx.setFillStyleColourPacked(0xFFFFFFFF);
+
+        ctx.fillTriangle(0.0, 0.0, 128.0, 128.0, 0.0, 128.0);
         //  ctx.fillPath(path);
         //  ctx.fillPolygon()
         // Detach the rendering context from `img`.
@@ -29,8 +31,6 @@ class Test {
         var codec = new ImageCodec();
         codec.findByName("PNG");
         img.writeToFile("bl-getting-started-1.png", codec);
-      
 
-        
     }
 }

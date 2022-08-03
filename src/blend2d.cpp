@@ -329,11 +329,24 @@ HL_PRIM void HL_NAME(Image_delete)( _ref(BLImage)* _this ) {
 	free_ref(_this );
 }
 DEFINE_PRIM(_VOID, Image_delete, _IDL);
-static void finalize_Triangle( _ref(BLTriangle)* _this ) { free_ref(_this ); }
-HL_PRIM void HL_NAME(Triangle_delete)( _ref(BLTriangle)* _this ) {
+static BLContextCreateFlags BLContextCreateFlags__values[] = { BL_CONTEXT_CREATE_NO_FLAGS,BL_CONTEXT_CREATE_FLAG_DISABLE_JIT,BL_CONTEXT_CREATE_FLAG_FALLBACK_TO_SYNC,BL_CONTEXT_CREATE_FLAG_ISOLATED_THREAD_POOL,BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT_RUNTIME,BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT_LOGGING,BL_CONTEXT_CREATE_FLAG_OVERRIDE_CPU_FEATURES };
+HL_PRIM int HL_NAME(BLContextCreateFlags_toValue0)( int idx ) {
+	return BLContextCreateFlags__values[idx];
+}
+DEFINE_PRIM(_I32, BLContextCreateFlags_toValue0, _I32);
+HL_PRIM int HL_NAME(BLContextCreateFlags_indexToValue0)( int idx ) {
+	return BLContextCreateFlags__values[idx];
+}
+DEFINE_PRIM(_I32, BLContextCreateFlags_indexToValue0, _I32);
+HL_PRIM int HL_NAME(BLContextCreateFlags_valueToIndex0)( int value ) {
+	for( int i = 0; i < 7; i++ ) if ( value == (int)BLContextCreateFlags__values[i]) return i; return -1;
+}
+DEFINE_PRIM(_I32, BLContextCreateFlags_valueToIndex0, _I32);
+static void finalize_ContextDesc( _ref(BLContextCreateInfo)* _this ) { free_ref(_this ); }
+HL_PRIM void HL_NAME(ContextDesc_delete)( _ref(BLContextCreateInfo)* _this ) {
 	free_ref(_this );
 }
-DEFINE_PRIM(_VOID, Triangle_delete, _IDL);
+DEFINE_PRIM(_VOID, ContextDesc_delete, _IDL);
 static void finalize_Context( _ref(BLContext)* _this ) { free_ref(_this ); }
 HL_PRIM void HL_NAME(Context_delete)( _ref(BLContext)* _this ) {
 	free_ref(_this );
@@ -361,6 +374,46 @@ HL_PRIM void HL_NAME(Image_writeToFile2)(_ref(BLImage)* _this, vstring * path, _
 }
 DEFINE_PRIM(_VOID, Image_writeToFile2, _IDL _STRING _IDL);
 
+HL_PRIM unsigned int HL_NAME(ContextDesc_get_flags)( _ref(BLContextCreateInfo)* _this ) {
+	return _unref(_this)->flags;
+}
+DEFINE_PRIM(_I32,ContextDesc_get_flags,_IDL);
+HL_PRIM unsigned int HL_NAME(ContextDesc_set_flags)( _ref(BLContextCreateInfo)* _this, unsigned int value ) {
+	_unref(_this)->flags = (value);
+	return value;
+}
+DEFINE_PRIM(_I32,ContextDesc_set_flags,_IDL _I32);
+
+HL_PRIM unsigned int HL_NAME(ContextDesc_get_threadCount)( _ref(BLContextCreateInfo)* _this ) {
+	return _unref(_this)->threadCount;
+}
+DEFINE_PRIM(_I32,ContextDesc_get_threadCount,_IDL);
+HL_PRIM unsigned int HL_NAME(ContextDesc_set_threadCount)( _ref(BLContextCreateInfo)* _this, unsigned int value ) {
+	_unref(_this)->threadCount = (value);
+	return value;
+}
+DEFINE_PRIM(_I32,ContextDesc_set_threadCount,_IDL _I32);
+
+HL_PRIM unsigned int HL_NAME(ContextDesc_get_cpuFeatures)( _ref(BLContextCreateInfo)* _this ) {
+	return _unref(_this)->cpuFeatures;
+}
+DEFINE_PRIM(_I32,ContextDesc_get_cpuFeatures,_IDL);
+HL_PRIM unsigned int HL_NAME(ContextDesc_set_cpuFeatures)( _ref(BLContextCreateInfo)* _this, unsigned int value ) {
+	_unref(_this)->cpuFeatures = (value);
+	return value;
+}
+DEFINE_PRIM(_I32,ContextDesc_set_cpuFeatures,_IDL _I32);
+
+HL_PRIM unsigned int HL_NAME(ContextDesc_get_commandQueueLimit)( _ref(BLContextCreateInfo)* _this ) {
+	return _unref(_this)->commandQueueLimit;
+}
+DEFINE_PRIM(_I32,ContextDesc_get_commandQueueLimit,_IDL);
+HL_PRIM unsigned int HL_NAME(ContextDesc_set_commandQueueLimit)( _ref(BLContextCreateInfo)* _this, unsigned int value ) {
+	_unref(_this)->commandQueueLimit = (value);
+	return value;
+}
+DEFINE_PRIM(_I32,ContextDesc_set_commandQueueLimit,_IDL _I32);
+
 HL_PRIM _ref(BLContext)* HL_NAME(Context_new0)() {
 	return alloc_ref((new BLContext()),Context);
 }
@@ -370,6 +423,11 @@ HL_PRIM void HL_NAME(Context_begin1)(_ref(BLContext)* _this, _ref(BLImage)* imag
 	(_unref(_this)->begin(*_unref_ptr_safe(image)));
 }
 DEFINE_PRIM(_VOID, Context_begin1, _IDL _IDL);
+
+HL_PRIM void HL_NAME(Context_beginEx2)(_ref(BLContext)* _this, _ref(BLImage)* image, _ref(BLContextCreateInfo)* desc) {
+	(_unref(_this)->begin(*_unref_ptr_safe(image), *_unref_ptr_safe(desc)));
+}
+DEFINE_PRIM(_VOID, Context_beginEx2, _IDL _IDL _IDL);
 
 HL_PRIM void HL_NAME(Context_fillAll0)(_ref(BLContext)* _this) {
 	(_unref(_this)->fillAll());
@@ -391,10 +449,65 @@ HL_PRIM void HL_NAME(Context_setFillStyleColourPacked1)(_ref(BLContext)* _this, 
 }
 DEFINE_PRIM(_VOID, Context_setFillStyleColourPacked1, _IDL _I32);
 
-HL_PRIM void HL_NAME(Context_fillTriangle1)(_ref(BLContext)* _this, _ref(BLTriangle)* triangle) {
-	(_unref(_this)->fillTriangle(*_unref_ptr_safe(triangle)));
+HL_PRIM void HL_NAME(Context_fillTriangle6)(_ref(BLContext)* _this, double x0, double y0, double x1, double y1, double x2, double y2) {
+	(_unref(_this)->fillTriangle(x0, y0, x1, y1, x2, y2));
 }
-DEFINE_PRIM(_VOID, Context_fillTriangle1, _IDL _IDL);
+DEFINE_PRIM(_VOID, Context_fillTriangle6, _IDL _F64 _F64 _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_fillCircle3)(_ref(BLContext)* _this, double cx, double cy, double r) {
+	(_unref(_this)->fillCircle(cx, cy, r));
+}
+DEFINE_PRIM(_VOID, Context_fillCircle3, _IDL _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_fillRect4)(_ref(BLContext)* _this, double x, double y, double w, double h) {
+	(_unref(_this)->fillRect(x, y, w, h));
+}
+DEFINE_PRIM(_VOID, Context_fillRect4, _IDL _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_fillRoundRect6)(_ref(BLContext)* _this, double x, double y, double w, double h, double rx, double ry) {
+	(_unref(_this)->fillRoundRect(x, y, w, h, rx, ry));
+}
+DEFINE_PRIM(_VOID, Context_fillRoundRect6, _IDL _F64 _F64 _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_fillPie6)(_ref(BLContext)* _this, double cx, double cy, double rx, double ry, double start, double sweep) {
+	(_unref(_this)->fillPie(cx, cy, rx, ry, start, sweep));
+}
+DEFINE_PRIM(_VOID, Context_fillPie6, _IDL _F64 _F64 _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_fillBox4)(_ref(BLContext)* _this, double x0, double y0, double x1, double y1) {
+	(_unref(_this)->fillBox(x0, y0, x1, y1));
+}
+DEFINE_PRIM(_VOID, Context_fillBox4, _IDL _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_strokeTriangle6)(_ref(BLContext)* _this, double x0, double y0, double x1, double y1, double x2, double y2) {
+	(_unref(_this)->strokeTriangle(x0, y0, x1, y1, x2, y2));
+}
+DEFINE_PRIM(_VOID, Context_strokeTriangle6, _IDL _F64 _F64 _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_strokeCircle3)(_ref(BLContext)* _this, double cx, double cy, double r) {
+	(_unref(_this)->strokeCircle(cx, cy, r));
+}
+DEFINE_PRIM(_VOID, Context_strokeCircle3, _IDL _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_strokeRect4)(_ref(BLContext)* _this, double x, double y, double w, double h) {
+	(_unref(_this)->strokeRect(x, y, w, h));
+}
+DEFINE_PRIM(_VOID, Context_strokeRect4, _IDL _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_strokeRoundRect6)(_ref(BLContext)* _this, double x, double y, double w, double h, double rx, double ry) {
+	(_unref(_this)->strokeRoundRect(x, y, w, h, rx, ry));
+}
+DEFINE_PRIM(_VOID, Context_strokeRoundRect6, _IDL _F64 _F64 _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_strokePie6)(_ref(BLContext)* _this, double cx, double cy, double rx, double ry, double start, double sweep) {
+	(_unref(_this)->strokePie(cx, cy, rx, ry, start, sweep));
+}
+DEFINE_PRIM(_VOID, Context_strokePie6, _IDL _F64 _F64 _F64 _F64 _F64 _F64);
+
+HL_PRIM void HL_NAME(Context_strokeBox4)(_ref(BLContext)* _this, double x0, double y0, double x1, double y1) {
+	(_unref(_this)->strokeBox(x0, y0, x1, y1));
+}
+DEFINE_PRIM(_VOID, Context_strokeBox4, _IDL _F64 _F64 _F64 _F64);
 
 HL_PRIM void HL_NAME(Context_end0)(_ref(BLContext)* _this) {
 	(_unref(_this)->end());
