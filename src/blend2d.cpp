@@ -347,6 +347,45 @@ HL_PRIM void HL_NAME(ContextDesc_delete)( _ref(BLContextCreateInfo)* _this ) {
 	free_ref(_this );
 }
 DEFINE_PRIM(_VOID, ContextDesc_delete, _IDL);
+static BLGradientQuality BLGradientQuality__values[] = { BL_GRADIENT_QUALITY_NEAREST };
+HL_PRIM int HL_NAME(BLGradientQuality_toValue0)( int idx ) {
+	return BLGradientQuality__values[idx];
+}
+DEFINE_PRIM(_I32, BLGradientQuality_toValue0, _I32);
+HL_PRIM int HL_NAME(BLGradientQuality_indexToValue0)( int idx ) {
+	return BLGradientQuality__values[idx];
+}
+DEFINE_PRIM(_I32, BLGradientQuality_indexToValue0, _I32);
+HL_PRIM int HL_NAME(BLGradientQuality_valueToIndex0)( int value ) {
+	for( int i = 0; i < 1; i++ ) if ( value == (int)BLGradientQuality__values[i]) return i; return -1;
+}
+DEFINE_PRIM(_I32, BLGradientQuality_valueToIndex0, _I32);
+static BLPatternQuality BLPatternQuality__values[] = { BL_PATTERN_QUALITY_NEAREST,BL_PATTERN_QUALITY_BILINEAR };
+HL_PRIM int HL_NAME(BLPatternQuality_toValue0)( int idx ) {
+	return BLPatternQuality__values[idx];
+}
+DEFINE_PRIM(_I32, BLPatternQuality_toValue0, _I32);
+HL_PRIM int HL_NAME(BLPatternQuality_indexToValue0)( int idx ) {
+	return BLPatternQuality__values[idx];
+}
+DEFINE_PRIM(_I32, BLPatternQuality_indexToValue0, _I32);
+HL_PRIM int HL_NAME(BLPatternQuality_valueToIndex0)( int value ) {
+	for( int i = 0; i < 2; i++ ) if ( value == (int)BLPatternQuality__values[i]) return i; return -1;
+}
+DEFINE_PRIM(_I32, BLPatternQuality_valueToIndex0, _I32);
+static BLFillRule BLFillRule__values[] = { BL_FILL_RULE_NON_ZERO,BL_FILL_RULE_EVEN_ODD };
+HL_PRIM int HL_NAME(BLFillRule_toValue0)( int idx ) {
+	return BLFillRule__values[idx];
+}
+DEFINE_PRIM(_I32, BLFillRule_toValue0, _I32);
+HL_PRIM int HL_NAME(BLFillRule_indexToValue0)( int idx ) {
+	return BLFillRule__values[idx];
+}
+DEFINE_PRIM(_I32, BLFillRule_indexToValue0, _I32);
+HL_PRIM int HL_NAME(BLFillRule_valueToIndex0)( int value ) {
+	for( int i = 0; i < 2; i++ ) if ( value == (int)BLFillRule__values[i]) return i; return -1;
+}
+DEFINE_PRIM(_I32, BLFillRule_valueToIndex0, _I32);
 static void finalize_Context( _ref(BLContext)* _this ) { free_ref(_this ); }
 HL_PRIM void HL_NAME(Context_delete)( _ref(BLContext)* _this ) {
 	free_ref(_this );
@@ -448,6 +487,21 @@ HL_PRIM void HL_NAME(Context_setFillStyleColourPacked1)(_ref(BLContext)* _this, 
 	(blend2_context_setFillStyleColourPacked( _unref(_this) , rgba));
 }
 DEFINE_PRIM(_VOID, Context_setFillStyleColourPacked1, _IDL _I32);
+
+HL_PRIM void HL_NAME(Context_setPatternQuality1)(_ref(BLContext)* _this, int value) {
+	(_unref(_this)->setPatternQuality(BLPatternQuality__values[value]));
+}
+DEFINE_PRIM(_VOID, Context_setPatternQuality1, _IDL _I32);
+
+HL_PRIM void HL_NAME(Context_setGradientQuality1)(_ref(BLContext)* _this, int value) {
+	(_unref(_this)->setGradientQuality(BLGradientQuality__values[value]));
+}
+DEFINE_PRIM(_VOID, Context_setGradientQuality1, _IDL _I32);
+
+HL_PRIM void HL_NAME(Context_setFillRule1)(_ref(BLContext)* _this, int rule) {
+	(_unref(_this)->setFillRule(BLFillRule__values[rule]));
+}
+DEFINE_PRIM(_VOID, Context_setFillRule1, _IDL _I32);
 
 HL_PRIM void HL_NAME(Context_fillTriangle6)(_ref(BLContext)* _this, double x0, double y0, double x1, double y1, double x2, double y2) {
 	(_unref(_this)->fillTriangle(x0, y0, x1, y1, x2, y2));
